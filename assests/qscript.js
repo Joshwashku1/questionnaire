@@ -6,6 +6,12 @@ var optionList = document.querySelector(".q-options");
 
 var timerCount = 75;
 
+var questionArray = ["What is an if statement?", "The usual purpose of statement 1, in a for loop, is to initialize ____. "+ 
+"[for(statement 1 ; statement2 ; statement 3 )]"];
+
+var optionAnswers = {
+}
+
 // initializes the page
 function init(){
     optionList.style.display = "none";
@@ -18,7 +24,7 @@ function sartQ() {
     
 
     startQuiz.style.display = "none";
-    optionList.style.display = "block";
+    
     timerCountdown();
     renderQ();
 
@@ -46,11 +52,23 @@ function timerCountdown(){
      
 }
 
-// add a function to change through questions
+// add a function to render the questions
 function renderQ(){
     // var btn = document.createElement("button");
     // btn.textContent = "HI";
     // questionElement.appendChild(btn);
+    optionList.style.display = "block";
+    questionElement.textContent = questionArray[1];
+
+    // for loop to render options
+    for(i=0;i<4;i++){
+        optionItem = document.createElement('button');
+
+        optionItem.innerHTML = "click me";
+
+        optionList.appendChild(optionItem);
+    }
 }
+
 
 init();
