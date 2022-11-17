@@ -16,6 +16,8 @@ var questionCount = 0;
 // check on the status of the option click
 var optionClick = false;
 console.log('This option click is ' + optionClick);
+let submitBtn;
+var clickBtn = document.querySelector(".submit-btn");
 // var qNum = questionArray.length;
 // qContainer.setAttribute("style", "display: block; border: dashed;");
 
@@ -114,9 +116,9 @@ function timerCountdown(){
 
         timerCount--;
         timerElement.innerHTML = timerCount;
-        if(timerCount > 0){
-
-        }else if(timerCount === 0 || timerCount < 0){
+        if(timerCount > 0 && questionCount <= questionArray.length - 1 ){
+            
+        }else if(timerCount === 0 || timerCount < 0 || questionCount >= questionArray.length - 1){
             isCorrect.style.display = 'none';
             renderF();
             clearInterval(startTimer);
@@ -127,7 +129,7 @@ function timerCountdown(){
     }, 1000);
      
 }
-
+console.log('question array # is: ' + questionArray.length);
 // add a function to render the questions
 function renderStart(){
 
@@ -164,13 +166,23 @@ function renderF(){
    
    highScore.appendChild(ibox);
 
-   let submitBtn = document.createElement('button');
+   submitBtn = document.createElement('button');
+   submitBtn.setAttribute('class','submit-btn');
    submitBtn.innerHTML = "Submit";
    highScore.appendChild(submitBtn);
 
    main.appendChild(highScore);
+
+   let scoreCard = document.querySelector('#score-num');
+   scoreCard.textContent = 'Your score is: ' + timerCount;
    highScore.style.display = "block";
 }
+
+// function storeLocalRender(){
+
+// }
+
+// clickBtn.addEventListener('click',storeLocalRender);
 
 // function handling if click on Option button the answer is true
 function clickOpt(event){
@@ -183,7 +195,9 @@ function clickOpt(event){
         correctStatus.textContent = 'You selected the correct Answer!';
         questionCount++;
         clear();
+        if(questionCount <= questionArray.length - 1){
         renderNext();
+        }
     } else {
         // reset click to false for next question
         optionClick = false;
@@ -191,7 +205,9 @@ function clickOpt(event){
         questionCount++;
         timerCount = timerCount - 5;
         clear();
-        renderNext();
+        if(questionCount <= questionArray.length - 1){
+            renderNext();
+        }
     }
     isCorrect.appendChild(correctStatus);  
     console.log('This option click is ' + optionClick);
@@ -200,6 +216,7 @@ function clickOpt(event){
 // render the next question
 function clear(){
     questionElement.textContent = '';
+    // removes all our option buttons
     while(optionList.firstChild){
         optionList.removeChild(optionList.firstChild);
     }
@@ -211,7 +228,7 @@ function clear(){
 function renderNext(){
     var optionArray = getOptions(questionArray);
     
-    
+    // This traverses through the question object
     for(i=0;i<questionArray.length;i++){
         if(i === questionCount){
             var question = questionArray[i].getQuestion();
@@ -219,6 +236,8 @@ function renderNext(){
             console.log("this should be a question: " + questionElement);
             var items = optionArray[i].length
             console.log('length of items is ' + items);
+            // This grabs the nested answer objects in each of the question objects
+            // Creates the answers into buttons
             for(j=0;j<items;j++){
                 var optionItem = document.createElement('button');
                 optionItem.setAttribute('class','option-btn');
@@ -232,7 +251,8 @@ function renderNext(){
     }
 }
 console.log('This is a time count: ' + questionCount);
-// checks to see if the answer clicked is true
+// checks to see if the answer clicked is true by checking if the event clicked has an innerhtml equivalent
+// passes in an event, and an array object
 function isAnswer(e,Array){
     var eventObj = e;
     if(Array.includes(eventObj.innerHTML)){
