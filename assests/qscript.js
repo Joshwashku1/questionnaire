@@ -3,10 +3,15 @@ var startQuiz = document.querySelector(".start-quiz-btn");
 var timerElement = document.querySelector(".timer-count");
 var questionElement = document.querySelector(".questions");
 var optionList = document.querySelector(".q-options");
-var qContainer = document.querySelector("q-container");
+var qContainer = document.querySelector(".q-container");
+var isCorrect = document.querySelector(".right-wrong");
+var oContainer = document.querySelector(".o-container");
 
 
 var timerCount = 75;
+// check on the status of the option click
+var optionClick = false;
+console.log('This option click is ' + optionClick);
 // var qNum = questionArray.length;
 // qContainer.setAttribute("style", "display: block; border: dashed;");
 
@@ -52,12 +57,16 @@ function getOptions(obj){
     return optionArrayValues;
 }
 
+function getAnswers(obj){
+    var answerArray = [];
+    for(i in obj){
+        answerArray.push(obj[i].answer);
+    }
+    return answerArray;
+}
+
 console.log(getOptions(questionArray));
 
-// function to check if the click is the answer
-function isAnswer(obj){
-
-}
 
 // initializes the page
 function init(){
@@ -69,7 +78,7 @@ function init(){
 
 function sartQ() {
     
-
+    optionClick = true;
     startQuiz.style.display = "none";
     
     timerCountdown();
@@ -103,48 +112,68 @@ function timerCountdown(){
 function renderQ(){
 
     optionList.style.display = "block";
-    
     var optionArray = getOptions(questionArray);
-
-    // for loop to render options
-    for(i=0;i<1;i++){
-        questionElement.textContent = questionArray[i].question;
-        var items = optionArray[i].length;
-        console.log(items);
-        console.log(optionArray)
-        // create button with option text
-        for(j=0;j<items;j++){
-            var optionItem = document.createElement('button');
-
-            optionItem.innerHTML = optionArray[0][j];
-            console.log(optionArray[0][j]);
-            optionList.appendChild(optionItem);
-        }
-    }
-
     
+    
+    for(let i in questionArray){
+        if(optionClick){
+            var question = questionArray[i].question
+            questionElement.innerHTML = question
+            console.log("this should be a question: " + questionElement);
+            var items = optionArray[i].length
+            console.log('length of items is ' + items);
+            for(j=0;j<items;j++){
+                var optionItem = document.createElement('button');
 
+                optionItem.innerHTML = optionArray[i][j];
+                console.log(optionArray[i][j]);
+                oContainer.appendChild(optionItem);
+            }
+            qContainer.appendChild(questionElement);
+
+        }
+        optionClick = false;
+    }
     
 }
 
-// function handling if click on the answer is true
+
+// function handling if click on Option button the answer is true
 function clickOpt(event){
     let targetOption = event.target;
-    clickTrue(targetOption);
+    var correctStatus = document.createElement('p');
+    // check to see if the click event is true or false
+    if(isAnswer(targetOption,getAnswers(questionArray))){
+        optionClick = true;
+        correctStatus.textContent = 'You selected the correct Answer!';
+        nextQ();
+    } else {
+        // reset click to false for next question
+        optionClick = false;
+        correctStatus.textContent = 'You selected the wrong Answer!';
+        timerCount = timerCount - 5;
+        nextQ();
+    }
+    isCorrect.appendChild(correctStatus);
+    console.log('This option click is ' + optionClick);
 }
-function clickTrue(element){
-    console.log(questionArray[0].answer);
-    //if clicked value is true = next question no time taken off
-    if(element.innerHTML ===  questionArray[0].answer){
-    var yes = document.createElement('p')
-    alert(yes.textContent = 'yes');
+
+// render the next question
+function nextQ(){
+    optionList.style.display = 'none';
+}
+
+// checks to see if the answer clicked is true
+function isAnswer(objE,objA){
+    var eventObj = objE;
+    if(objA.includes(eventObj.innerHTML)){
+       return optionClick = true;
     }
 
-    //if clicked value is false = next question time taken off
 }
 
 // add an event listener to the option buttons
-optionList.addEventListener('click', clickOpt);
+oContainer.addEventListener('click', clickOpt);
 
 
 init();
