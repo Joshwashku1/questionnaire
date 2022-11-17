@@ -6,6 +6,8 @@ var optionList = document.querySelector(".q-options");
 var qContainer = document.querySelector(".q-container");
 var isCorrect = document.querySelector(".right-wrong");
 var oContainer = document.querySelector(".o-container");
+var main = document.querySelector(".main");
+var highScore = document.querySelector(".highscore");
 
 
 var timerCount = 75;
@@ -24,7 +26,13 @@ var questionArray = [
         'a conditional statement',
         'a string',
     ],
-    answer: 'a conditional statement'
+    answer: 'a conditional statement',
+    getAnswer : function(){
+        return this.answer;
+    },
+    getQuestion : function(){
+        return this.question;
+    }
     }, 
     {
     question: "The usual purpose of statement 1, in a for loop, is to initialize ____. "+ 
@@ -35,7 +43,13 @@ var questionArray = [
         'the object variable',
         'the mt. dew variable'
     ],
-    answer: 'the count variable'
+    answer: 'the count variable',
+    getAnswer : function(){
+        return this.answer;
+    },
+    getQuestion : function(){
+        return this.question;
+    }
     },
 ];
 
@@ -70,7 +84,8 @@ console.log(getOptions(questionArray));
 
 // initializes the page
 function init(){
-    optionList.style.display = "none";
+    oContainer.style.display = "none";
+    highScore.style.display = "none";
     timerElement.innerHTML = timerCount;
 }
 
@@ -99,8 +114,13 @@ function timerCountdown(){
         timerElement.innerHTML = timerCount;
         if(timerCount > 0){
 
-        }else if(timerCount === 0){
+        }else if(timerCount === 0 || timerCount < 0){
+            qContainer.style.display = 'none';
+            oContainer.style.display = 'none';
+            isCorrect.style.display = 'none';
+            renderF();
             clearInterval(startTimer);
+            timerElement.innerHTML = 0;
         
         }
 
@@ -111,13 +131,13 @@ function timerCountdown(){
 // add a function to render the questions
 function renderQ(){
 
-    optionList.style.display = "block";
+    oContainer.style.display = "block";
     var optionArray = getOptions(questionArray);
     
     
     for(let i in questionArray){
         if(optionClick){
-            var question = questionArray[i].question
+            var question = questionArray[i].getQuestion();
             questionElement.innerHTML = question
             console.log("this should be a question: " + questionElement);
             var items = optionArray[i].length
@@ -130,13 +150,25 @@ function renderQ(){
                 oContainer.appendChild(optionItem);
             }
             qContainer.appendChild(questionElement);
-
         }
         optionClick = false;
     }
     
 }
 
+function renderF(){
+   let ibox = document.querySelector('#initials');
+   ibox.setAttribute('placeholder','Thank you');
+   
+   highScore.appendChild(ibox);
+
+   let submitBtn = document.createElement('button');
+   submitBtn.innerHTML = "Submit";
+   highScore.appendChild(submitBtn);
+
+   main.appendChild(highScore);
+   highScore.style.display = "block";
+}
 
 // function handling if click on Option button the answer is true
 function clickOpt(event){
