@@ -112,6 +112,7 @@ function renderQ(){
         var items = optionArray[i].length;
         console.log(items);
         console.log(optionArray)
+        // create button with option text
         for(j=0;j<items;j++){
             var optionItem = document.createElement('button');
 
@@ -126,20 +127,24 @@ function renderQ(){
     
 }
 
-
-
-// add an event listener to the option buttons
-optionList.addEventListener('click', function(event){
-
-    var target = event.target;
+// function handling if click is true
+function clickOpt(event){
+    let targetOption = event.target;
+    clickTrue(targetOption);
+}
+function clickTrue(element){
+    console.log(questionArray[0].answer);
     //if clicked value is true = next question no time taken off
-    if(target){
+    if(element.innerHTML ===  questionArray[0].answer){
     var yes = document.createElement('p')
     alert(yes.textContent = 'yes');
     }
 
     //if clicked value is false = next question time taken off
-});
+}
+
+// add an event listener to the option buttons
+optionList.addEventListener('click', clickOpt);
 
 
 init();
