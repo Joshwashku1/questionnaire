@@ -11,6 +11,8 @@ var highScore = document.querySelector(".highscore");
 
 
 var timerCount = 75;
+// check to see what question to render
+var questionCount = 0;
 // check on the status of the option click
 var optionClick = false;
 console.log('This option click is ' + optionClick);
@@ -91,18 +93,18 @@ function init(){
 
 // Start quiz function: when this function is called upon it will start the quiz
 
-function sartQ() {
+function sartQuiz() {
     
     optionClick = true;
     startQuiz.style.display = "none";
     
     timerCountdown();
-    renderQ();
+    renderStart();
 
 }
 
 // add event listener to call the function when click
-startQuiz.addEventListener("click", sartQ);
+startQuiz.addEventListener("click", sartQuiz);
 
 // add a function to start a timer
 function timerCountdown(){
@@ -115,8 +117,6 @@ function timerCountdown(){
         if(timerCount > 0){
 
         }else if(timerCount === 0 || timerCount < 0){
-            qContainer.style.display = 'none';
-            oContainer.style.display = 'none';
             isCorrect.style.display = 'none';
             renderF();
             clearInterval(startTimer);
@@ -129,14 +129,14 @@ function timerCountdown(){
 }
 
 // add a function to render the questions
-function renderQ(){
+function renderStart(){
 
     oContainer.style.display = "block";
     var optionArray = getOptions(questionArray);
     
     
-    for(let i in questionArray){
-        if(optionClick){
+    for(i=0;i<questionArray.length;i++){
+        if(i == questionCount){
             var question = questionArray[i].getQuestion();
             questionElement.innerHTML = question
             console.log("this should be a question: " + questionElement);
@@ -144,18 +144,20 @@ function renderQ(){
             console.log('length of items is ' + items);
             for(j=0;j<items;j++){
                 var optionItem = document.createElement('button');
-
+                optionItem.setAttribute('class','option-btn');
                 optionItem.innerHTML = optionArray[i][j];
                 console.log(optionArray[i][j]);
-                oContainer.appendChild(optionItem);
+                optionList.appendChild(optionItem);
             }
             qContainer.appendChild(questionElement);
         }
-        optionClick = false;
+        
     }
+
+    
     
 }
-
+// Render submit form
 function renderF(){
    let ibox = document.querySelector('#initials');
    ibox.setAttribute('placeholder','Thank you');
@@ -172,33 +174,68 @@ function renderF(){
 
 // function handling if click on Option button the answer is true
 function clickOpt(event){
+    
     let targetOption = event.target;
     var correctStatus = document.createElement('p');
     // check to see if the click event is true or false
     if(isAnswer(targetOption,getAnswers(questionArray))){
         optionClick = true;
         correctStatus.textContent = 'You selected the correct Answer!';
-        nextQ();
+        questionCount++;
+        clear();
+        renderNext();
     } else {
         // reset click to false for next question
         optionClick = false;
         correctStatus.textContent = 'You selected the wrong Answer!';
+        questionCount++;
         timerCount = timerCount - 5;
-        nextQ();
+        clear();
+        renderNext();
     }
-    isCorrect.appendChild(correctStatus);
+    isCorrect.appendChild(correctStatus);  
     console.log('This option click is ' + optionClick);
 }
 
 // render the next question
-function nextQ(){
-    optionList.style.display = 'none';
+function clear(){
+    questionElement.textContent = '';
+    while(optionList.firstChild){
+        optionList.removeChild(optionList.firstChild);
+    }
+    isCorrect.innerHTML = '';
+
 }
 
+// function renderNext
+function renderNext(){
+    var optionArray = getOptions(questionArray);
+    
+    
+    for(i=0;i<questionArray.length;i++){
+        if(i === questionCount){
+            var question = questionArray[i].getQuestion();
+            questionElement.innerHTML = question
+            console.log("this should be a question: " + questionElement);
+            var items = optionArray[i].length
+            console.log('length of items is ' + items);
+            for(j=0;j<items;j++){
+                var optionItem = document.createElement('button');
+                optionItem.setAttribute('class','option-btn');
+                optionItem.innerHTML = optionArray[i][j];
+                console.log(optionArray[i][j]);
+                optionList.appendChild(optionItem);
+            }
+            qContainer.appendChild(questionElement);
+        }
+        
+    }
+}
+console.log('This is a time count: ' + questionCount);
 // checks to see if the answer clicked is true
-function isAnswer(objE,objA){
-    var eventObj = objE;
-    if(objA.includes(eventObj.innerHTML)){
+function isAnswer(e,Array){
+    var eventObj = e;
+    if(Array.includes(eventObj.innerHTML)){
        return optionClick = true;
     }
 
