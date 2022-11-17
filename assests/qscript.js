@@ -127,7 +127,7 @@ function renderQ(){
     
 }
 
-// function handling if click is true
+// function handling if click on the answer is true
 function clickOpt(event){
     let targetOption = event.target;
     clickTrue(targetOption);
