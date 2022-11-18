@@ -55,6 +55,38 @@ var questionArray = [
         return this.question;
     }
     },
+    {
+        question: "How do you increment in javascript?",
+        options: [
+            'value++',
+            'value--',
+            'value+',
+            'value-',
+        ],
+        answer: 'value++',
+        getAnswer : function(){
+            return this.answer;
+        },
+        getQuestion : function(){
+            return this.question;
+        }
+    },
+    {
+        question: "How do you decrement in javascript?",
+        options: [
+            'value++',
+            'value--',
+            'value+',
+            'value-',
+        ],
+        answer: 'value--',
+        getAnswer : function(){
+            return this.answer;
+        },
+        getQuestion : function(){
+            return this.question;
+        }
+    }
 ];
 
 // grab the options
@@ -130,6 +162,7 @@ function timerCountdown(){
      
 }
 console.log('question array # is: ' + questionArray.length);
+
 // add a function to render the questions
 function renderStart(){
 
